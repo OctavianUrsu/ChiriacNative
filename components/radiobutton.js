@@ -7,10 +7,12 @@ export default class Radiobutton extends Component {
     data: [
       {
         label: "Male",
+        value: "male",
         color: "#1e90ff"
       },
       {
         label: "Female",
+        value: "female",
         color: "#ff6b81"
       }
     ]

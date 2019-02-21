@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput
-} from "react-native";
-import Radiobutton from "./radiobutton";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { TextField } from "react-native-material-textfield";
 
 export default class Input extends Component {
   state = {
-    varsta: " ",
-    inaltimea: " ",
-    kilograme: " "
+    varsta: "",
+    inaltimea: "",
+    kilograme: ""
   };
   handleVarsta = text => {
     this.setState({ varsta: text });
@@ -27,35 +21,34 @@ export default class Input extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
-          placeholder="Varsta"
-          keyboardType="number-pad"
-          selectionColor="#E62027"
-          style={styles.input}
+        <TextField
+          label="Varsta"
+          keyboardType="numeric"
+          maxLength="3"
+          tintColor="#E62027"
           value={this.state.text}
           onChangeText={this.handleVarsta}
         />
 
-        <TextInput
-          placeholder="Inaltimea"
-          keyboardType="number-pad"
-          selectionColor="#E62027"
-          style={styles.input}
+        <TextField
+          label="Inaltimea"
+          keyboardType="numeric"
+          suffix="cm"
+          maxLength="3"
+          tintColor="#E62027"
           value={this.state.text}
           onChangeText={this.handleInaltimea}
         />
 
-        <TextInput
-          placeholder="Masa"
-          keyboardType="number-pad"
-          selectionColor="#E62027"
-          underlineColorAndroid="#E62027"
-          style={styles.input}
+        <TextField
+          label="Masa"
+          keyboardType="numeric"
+          suffix="kg"
+          maxLength="3"
+          tintColor="#E62027"
           value={this.state.text}
           onChangeText={this.handleKilograme}
         />
-
-        <Radiobutton />
 
         <TouchableOpacity
           style={styles.submitButton}
@@ -77,13 +70,6 @@ export default class Input extends Component {
 const styles = StyleSheet.create({
   container: {
     marginTop: 200
-  },
-  input: {
-    margin: 10,
-    padding: 10,
-    height: 40,
-    borderColor: "#dbdee0",
-    borderWidth: 0.3
   },
   submitButton: {
     backgroundColor: "#962929",
