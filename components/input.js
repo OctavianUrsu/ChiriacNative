@@ -1,23 +1,87 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
-import RadioButton from "./radiobutton";
+import { View, StyleSheet, AsyncStorage, Text } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Button } from "react-native-material-ui";
+import RadioGroup from "react-native-radio-buttons-group";
 
 export default class Input extends Component {
   state = {
     varsta: "",
     inaltimea: "",
-    kilograme: ""
+    masa: "",
+    data: [
+      {
+        label: "Male",
+        value: "male",
+        color: "#1e90ff"
+      },
+      {
+        label: "Female",
+        value: "female",
+        color: "#ff6b81"
+      }
+    ]
   };
-  handleVarsta = text => {
-    this.setState({ varsta: text });
+
+  onPress = data => this.setState({ data });
+
+  componentDidMount = () => {
+    try {
+      AsyncStorage.getItem("varsta")
+        .then(value => {
+          this.setState({ varsta: value });
+        })
+        .done();
+
+      AsyncStorage.getItem("inaltimea")
+        .then(value => {
+          this.setState({ inaltimea: value });
+        })
+        .done();
+
+      AsyncStorage.getItem("masa")
+        .then(value => {
+          this.setState({ masa: value });
+        })
+        .done();
+    } catch (error) {
+      console.log("Error showing data" + error);
+    }
   };
-  handleInaltimea = text => {
-    this.setState({ inaltimea: text });
+
+  getInitialState = () => {
+    try {
+      return {};
+    } catch (error) {
+      console.log("Error initialising data" + error);
+    }
   };
-  handleKilograme = text => {
-    this.setState({ kilograme: text });
+
+  saveDataVarsta = value => {
+    AsyncStorage.setItem("varsta", value);
+    this.setState({ varsta: value });
+  };
+
+  saveDataInaltimea = value => {
+    AsyncStorage.setItem("inaltimea", value);
+    this.setState({ inaltimea: value });
+  };
+
+  saveDataMasa = value => {
+    AsyncStorage.setItem("masa", value);
+    this.setState({ masa: value });
+  };
+
+  submitDataVarsta = value => {
+    AsyncStorage.setItem("varsta", this.state.varsta);
+  };
+
+  submitDataInaltimea = value => {
+    AsyncStorage.setItem("inaltimea", this.state.inaltimea);
+  };
+
+  submitDataMasa = value => {
+    AsyncStorage.setItem("masa", this.state.masa);
   };
 
   render() {
@@ -28,8 +92,8 @@ export default class Input extends Component {
           keyboardType="numeric"
           maxLength={3}
           tintColor="#E62027"
-          value={this.state.text}
-          onChangeText={this.handleVarsta}
+          value={this.state.varsta}
+          onChangeText={text => this.saveDataVarsta(text)}
         />
 
         <TextField
@@ -38,8 +102,8 @@ export default class Input extends Component {
           suffix="cm"
           maxLength={3}
           tintColor="#E62027"
-          value={this.state.text}
-          onChangeText={this.handleInaltimea}
+          value={this.state.inaltimea}
+          onChangeText={text => this.saveDataInaltimea(text)}
         />
 
         <TextField
@@ -48,22 +112,26 @@ export default class Input extends Component {
           suffix="kg"
           maxLength={3}
           tintColor="#E62027"
-          value={this.state.text}
-          onChangeText={this.handleKilograme}
+          value={this.state.masa}
+          onChangeText={text => this.saveDataMasa(text)}
         />
 
-        <RadioButton />
+        <View style={styles.radiobutton}>
+          <RadioGroup
+            radioButtons={this.state.data}
+            onPress={this.onPress}
+            flexDirection="row"
+          />
+        </View>
 
         <Button
           raised
           primary
           text="Save"
-          onPress={() =>
-            this.date(
-              this.state.varsta,
-              this.state.inaltimea,
-              this.state.kilograme
-            )
+          onPress={
+            (this.submitDataInaltimea,
+            this.submitDataMasa,
+            this.submitDataVarsta)
           }
         />
       </View>
@@ -77,5 +145,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "stretch"
+  },
+
+  radiobutton: {
+    padding: 10
   }
 });
