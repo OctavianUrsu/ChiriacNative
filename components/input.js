@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import RadioButton from "./radiobutton";
 import { TextField } from "react-native-material-textfield";
+import { Button } from "react-native-material-ui";
 
 export default class Input extends Component {
   state = {
@@ -24,7 +26,7 @@ export default class Input extends Component {
         <TextField
           label="Varsta"
           keyboardType="numeric"
-          maxLength="3"
+          maxLength={3}
           tintColor="#E62027"
           value={this.state.text}
           onChangeText={this.handleVarsta}
@@ -34,7 +36,7 @@ export default class Input extends Component {
           label="Inaltimea"
           keyboardType="numeric"
           suffix="cm"
-          maxLength="3"
+          maxLength={3}
           tintColor="#E62027"
           value={this.state.text}
           onChangeText={this.handleInaltimea}
@@ -44,14 +46,18 @@ export default class Input extends Component {
           label="Masa"
           keyboardType="numeric"
           suffix="kg"
-          maxLength="3"
+          maxLength={3}
           tintColor="#E62027"
           value={this.state.text}
           onChangeText={this.handleKilograme}
         />
 
-        <TouchableOpacity
-          style={styles.submitButton}
+        <RadioButton />
+
+        <Button
+          raised
+          primary
+          text="Save"
           onPress={() =>
             this.date(
               this.state.varsta,
@@ -59,9 +65,7 @@ export default class Input extends Component {
               this.state.kilograme
             )
           }
-        >
-          <Text style={styles.submitButtonText}> Submit </Text>
-        </TouchableOpacity>
+        />
       </View>
     );
   }
@@ -69,15 +73,9 @@ export default class Input extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 200
-  },
-  submitButton: {
-    backgroundColor: "#962929",
-    padding: 7,
-    margin: 100,
-    height: 40
-  },
-  submitButtonText: {
-    color: "white"
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "stretch"
   }
 });

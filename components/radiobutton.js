@@ -27,7 +27,7 @@ export default class Radiobutton extends Component {
       ? selectedButton.value
       : this.state.data[0].label;
     return (
-      <View style={styles.container}>
+      <View style={styles.radiobutton}>
         <RadioGroup
           radioButtons={this.state.data}
           onPress={this.onPress}
@@ -39,14 +39,7 @@ export default class Radiobutton extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  valueText: {
-    fontSize: 18,
-    marginBottom: 50
+  radiobutton: {
+    padding: 10
   }
 });
