@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, AsyncStorage, Keyboard } from "react-native";
+import { View, AsyncStorage } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Button } from "react-native-material-ui";
 import RadioGroup from "react-native-radio-buttons-group";
@@ -23,35 +23,37 @@ export default class Input extends Component {
     ]
   };
 
-  componentWillMount = () => {
-    this.getValueFromStorage;
-  };
-
-  getValueFromStorage = () => {
-    AsyncStorage.multiGet(["age", "height", "weight"]).then(value => {
-      multiSet([["age", value], ["height", value], ["weight", value]]);
-    });
-  };
-
-  getInitialState = () => {
+  componentDidMount = () => {
     try {
-      return {};
+      AsyncStorage.getItem("age")
+        .then(value => {
+          this.setState({ age: value });
+        })
+        .done();
+
+      AsyncStorage.getItem("height")
+        .then(value => {
+          this.setState({ height: value });
+        })
+        .done();
+
+      AsyncStorage.getItem("weight")
+        .then(value => {
+          this.setState({ weight: value });
+        })
+        .done();
     } catch (error) {
-      console.log("Error initialising data" + error);
+      console.log("Error showing data" + error);
     }
   };
 
-  handleAge = age => {
-    this.setState({ age });
-  };
-
-  handleHeight = height => {
-    this.setState({ height });
-  };
-
-  handleWeight = weight => {
-    this.setState({ weight });
-  };
+  // componentDidMount = () => {
+  //   AsyncStorage.multiGet(["age", "weight", "height"])
+  //     .then(value => {
+  //       this.setState({ age: value });
+  //     })
+  //     .done();
+  // };
 
   handleSubmit = () => {
     AsyncStorage.multiSet([
@@ -61,9 +63,21 @@ export default class Input extends Component {
     ]);
   };
 
+  handleRemove = () => {
+    let removeKeys = ["age", "weight", "height"];
+    AsyncStorage.multiRemove(removeKeys);
+  };
+
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "stretch"
+        }}
+      >
         <View style={{ padding: 10 }}>
           <TextField
             label="Varsta"
@@ -71,7 +85,7 @@ export default class Input extends Component {
             maxLength={3}
             tintColor="#E62027"
             value={this.state.age}
-            onChangeText={this.handleAge}
+            onChangeText={age => this.setState({ age })}
           />
 
           <TextField
@@ -81,7 +95,7 @@ export default class Input extends Component {
             maxLength={3}
             tintColor="#E62027"
             value={this.state.height}
-            onChangeText={this.handleHeight}
+            onChangeText={height => this.setState({ height })}
           />
 
           <TextField
@@ -91,7 +105,7 @@ export default class Input extends Component {
             maxLength={3}
             tintColor="#E62027"
             value={this.state.weight}
-            onChangeText={this.handleWeight}
+            onChangeText={weight => this.setState({ weight })}
           />
         </View>
 
@@ -114,19 +128,10 @@ export default class Input extends Component {
             <Button raised primary text="Save" onPress={this.handleSubmit} />
           </View>
           <View style={{ flex: 1, marginLeft: 10 }}>
-            <Button raised accent text="Reset" />
+            <Button raised accent text="Reset" onPress={this.handleRemove} />
           </View>
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "stretch"
-  }
-});
