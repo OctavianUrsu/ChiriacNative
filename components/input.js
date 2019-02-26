@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import { View, StyleSheet, AsyncStorage, Text } from "react-native";
+import { View, StyleSheet, AsyncStorage, Keyboard } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Button } from "react-native-material-ui";
 import RadioGroup from "react-native-radio-buttons-group";
 
 export default class Input extends Component {
   state = {
-    varsta: "",
-    inaltimea: "",
-    masa: "",
+    age: "",
+    height: "",
+    weight: "",
     data: [
       {
         label: "Male",
@@ -23,30 +23,14 @@ export default class Input extends Component {
     ]
   };
 
-  onPress = data => this.setState({ data });
+  componentWillMount = () => {
+    this.getValueFromStorage;
+  };
 
-  componentDidMount = () => {
-    try {
-      AsyncStorage.getItem("varsta")
-        .then(value => {
-          this.setState({ varsta: value });
-        })
-        .done();
-
-      AsyncStorage.getItem("inaltimea")
-        .then(value => {
-          this.setState({ inaltimea: value });
-        })
-        .done();
-
-      AsyncStorage.getItem("masa")
-        .then(value => {
-          this.setState({ masa: value });
-        })
-        .done();
-    } catch (error) {
-      console.log("Error showing data" + error);
-    }
+  getValueFromStorage = () => {
+    AsyncStorage.multiGet(["age", "height", "weight"]).then(value => {
+      multiSet([["age", value], ["height", value], ["weight", value]]);
+    });
   };
 
   getInitialState = () => {
@@ -57,66 +41,61 @@ export default class Input extends Component {
     }
   };
 
-  saveDataVarsta = value => {
-    AsyncStorage.setItem("varsta", value);
-    this.setState({ varsta: value });
+  handleAge = age => {
+    this.setState({ age });
   };
 
-  saveDataInaltimea = value => {
-    AsyncStorage.setItem("inaltimea", value);
-    this.setState({ inaltimea: value });
+  handleHeight = height => {
+    this.setState({ height });
   };
 
-  saveDataMasa = value => {
-    AsyncStorage.setItem("masa", value);
-    this.setState({ masa: value });
+  handleWeight = weight => {
+    this.setState({ weight });
   };
 
-  submitDataVarsta = value => {
-    AsyncStorage.setItem("varsta", this.state.varsta);
-  };
-
-  submitDataInaltimea = value => {
-    AsyncStorage.setItem("inaltimea", this.state.inaltimea);
-  };
-
-  submitDataMasa = value => {
-    AsyncStorage.setItem("masa", this.state.masa);
+  handleSubmit = () => {
+    AsyncStorage.multiSet([
+      ["age", this.state.age],
+      ["height", this.state.height],
+      ["weight", this.state.weight]
+    ]);
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <TextField
-          label="Varsta"
-          keyboardType="numeric"
-          maxLength={3}
-          tintColor="#E62027"
-          value={this.state.varsta}
-          onChangeText={text => this.saveDataVarsta(text)}
-        />
+        <View style={{ padding: 10 }}>
+          <TextField
+            label="Varsta"
+            keyboardType="numeric"
+            maxLength={3}
+            tintColor="#E62027"
+            value={this.state.age}
+            onChangeText={this.handleAge}
+          />
 
-        <TextField
-          label="Inaltimea"
-          keyboardType="numeric"
-          suffix="cm"
-          maxLength={3}
-          tintColor="#E62027"
-          value={this.state.inaltimea}
-          onChangeText={text => this.saveDataInaltimea(text)}
-        />
+          <TextField
+            label="Inaltimea"
+            keyboardType="numeric"
+            suffix="cm"
+            maxLength={3}
+            tintColor="#E62027"
+            value={this.state.height}
+            onChangeText={this.handleHeight}
+          />
 
-        <TextField
-          label="Masa"
-          keyboardType="numeric"
-          suffix="kg"
-          maxLength={3}
-          tintColor="#E62027"
-          value={this.state.masa}
-          onChangeText={text => this.saveDataMasa(text)}
-        />
+          <TextField
+            label="Masa"
+            keyboardType="numeric"
+            suffix="kg"
+            maxLength={3}
+            tintColor="#E62027"
+            value={this.state.weight}
+            onChangeText={this.handleWeight}
+          />
+        </View>
 
-        <View style={styles.radiobutton}>
+        <View style={{ padding: 10 }}>
           <RadioGroup
             radioButtons={this.state.data}
             onPress={this.onPress}
@@ -124,16 +103,20 @@ export default class Input extends Component {
           />
         </View>
 
-        <Button
-          raised
-          primary
-          text="Save"
-          onPress={
-            (this.submitDataInaltimea,
-            this.submitDataMasa,
-            this.submitDataVarsta)
-          }
-        />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            padding: 10
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Button raised primary text="Save" onPress={this.handleSubmit} />
+          </View>
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <Button raised accent text="Reset" />
+          </View>
+        </View>
       </View>
     );
   }
@@ -145,9 +128,5 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "stretch"
-  },
-
-  radiobutton: {
-    padding: 10
   }
 });
