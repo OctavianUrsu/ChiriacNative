@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, AsyncStorage } from "react-native";
+import { View, AsyncStorage, Alert } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Button } from "react-native-material-ui";
 import RadioGroup from "react-native-radio-buttons-group";
@@ -24,43 +24,35 @@ export default class Input extends Component {
   };
 
   componentDidMount = () => {
-    try {
-      AsyncStorage.getItem("age")
-        .then(value => {
-          this.setState({ age: value });
-        })
-        .done();
+    AsyncStorage.getItem("age")
+      .then(value => {
+        this.setState({ age: value });
+      })
+      .done();
 
-      AsyncStorage.getItem("height")
-        .then(value => {
-          this.setState({ height: value });
-        })
-        .done();
+    AsyncStorage.getItem("height")
+      .then(value => {
+        this.setState({ height: value });
+      })
+      .done();
 
-      AsyncStorage.getItem("weight")
-        .then(value => {
-          this.setState({ weight: value });
-        })
-        .done();
-    } catch (error) {
-      console.log("Error showing data" + error);
-    }
+    AsyncStorage.getItem("weight")
+      .then(value => {
+        this.setState({ weight: value });
+      })
+      .done();
   };
 
-  // componentDidMount = () => {
-  //   AsyncStorage.multiGet(["age", "weight", "height"])
-  //     .then(value => {
-  //       this.setState({ age: value });
-  //     })
-  //     .done();
-  // };
-
   handleSubmit = () => {
-    AsyncStorage.multiSet([
-      ["age", this.state.age],
-      ["height", this.state.height],
-      ["weight", this.state.weight]
-    ]);
+    if ((this.state.age && this.state.weight && this.state.height) === null) {
+      Alert.alert("Insereaza toate datele");
+    } else {
+      AsyncStorage.multiSet([
+        ["age", this.state.age],
+        ["height", this.state.height],
+        ["weight", this.state.weight]
+      ]);
+    }
   };
 
   handleRemove = () => {
