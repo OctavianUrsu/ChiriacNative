@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, AsyncStorage, Alert } from "react-native";
+import { View, AsyncStorage, Alert, Text } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Button } from "react-native-material-ui";
 import RadioGroup from "react-native-radio-buttons-group";
@@ -23,7 +23,7 @@ export default class Input extends Component {
     ]
   };
 
-  componentDidMount = () => {
+  componentWillMount = () => {
     AsyncStorage.getItem("age")
       .then(value => {
         this.setState({ age: value });
@@ -44,8 +44,8 @@ export default class Input extends Component {
   };
 
   handleSubmit = () => {
-    if ((this.state.age && this.state.weight && this.state.height) === null) {
-      Alert.alert("Insereaza toate datele");
+    if ((this.state.age || this.state.weight || this.state.height) === null) {
+      Alert.alert("Eroare", "Introduceti toate datele");
     } else {
       AsyncStorage.multiSet([
         ["age", this.state.age],
@@ -58,6 +58,11 @@ export default class Input extends Component {
   handleRemove = () => {
     let removeKeys = ["age", "weight", "height"];
     AsyncStorage.multiRemove(removeKeys);
+    this.setState({
+      age: AsyncStorage.getItem("age"),
+      weight: AsyncStorage.getItem("weight"),
+      height: AsyncStorage.getItem("height")
+    });
   };
 
   render() {
@@ -104,7 +109,7 @@ export default class Input extends Component {
         <View style={{ padding: 10 }}>
           <RadioGroup
             radioButtons={this.state.data}
-            onPress={this.onPress}
+            onPress={data => this.setState({ data })}
             flexDirection="row"
           />
         </View>
