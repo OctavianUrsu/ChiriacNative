@@ -1,68 +1,67 @@
 import React, { Component } from "react";
-import { View, AsyncStorage, Alert, Text } from "react-native";
+import { View, AsyncStorage, Alert } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Button } from "react-native-material-ui";
-import RadioGroup from "react-native-radio-buttons-group";
+import SwitchSelector from "react-native-switch-selector";
 
 export default class Input extends Component {
   state = {
     age: "",
     height: "",
     weight: "",
+    selectedItem: "",
     data: [
       {
         label: "Male",
-        value: "male",
+        value: "0",
         color: "#1e90ff"
       },
       {
         label: "Female",
-        value: "female",
+        value: "1",
         color: "#ff6b81"
       }
     ]
   };
 
-  componentWillMount = () => {
-    AsyncStorage.getItem("age")
-      .then(value => {
-        this.setState({ age: value });
-      })
-      .done();
+  async componentDidMount() {
+    let getKeys = ["age", "height", "weight", "selectedItem"];
+    const [age, height, weight, selectedItem] = await AsyncStorage.multiGet(
+      getKeys
+    );
+    this.setState({
+      age: age[1],
+      height: height[1],
+      weight: weight[1],
+      selectedItem: selectedItem[1]
+    });
+  }
 
-    AsyncStorage.getItem("height")
-      .then(value => {
-        this.setState({ height: value });
-      })
-      .done();
-
-    AsyncStorage.getItem("weight")
-      .then(value => {
-        this.setState({ weight: value });
-      })
-      .done();
-  };
-
-  handleSubmit = () => {
-    if ((this.state.age || this.state.weight || this.state.height) === null) {
-      Alert.alert("Eroare", "Introduceti toate datele");
+  handleSubmit = async () => {
+    if ((this.state.age && this.state.weight && this.state.height) === null) {
+      Alert.alert("Eroare", "Introduceți toate datele");
     } else {
-      AsyncStorage.multiSet([
+      await AsyncStorage.multiSet([
         ["age", this.state.age],
         ["height", this.state.height],
-        ["weight", this.state.weight]
+        ["weight", this.state.weight],
+        ["selectedItem", this.state.selectedItem]
       ]);
     }
   };
 
-  handleRemove = () => {
+  handleRemove = async () => {
     let removeKeys = ["age", "weight", "height"];
-    AsyncStorage.multiRemove(removeKeys);
+    await AsyncStorage.multiRemove(removeKeys);
     this.setState({
-      age: AsyncStorage.getItem("age"),
-      weight: AsyncStorage.getItem("weight"),
-      height: AsyncStorage.getItem("height")
+      age: "",
+      weight: "",
+      height: ""
     });
+  };
+
+  handleRadio = data => {
+    this.setState({ selectedItem: data });
   };
 
   render() {
@@ -107,10 +106,19 @@ export default class Input extends Component {
         </View>
 
         <View style={{ padding: 10 }}>
-          <RadioGroup
-            radioButtons={this.state.data}
-            onPress={data => this.setState({ data })}
-            flexDirection="row"
+          <SwitchSelector
+            value={this.state.selectedItem}
+            onPress={value => this.setState({ selectedItem: value })}
+            textColor={"#E62027"}
+            selectedColor={"#fff"}
+            buttonColor={"#E62027"}
+            borderColor={"#E62027"}
+            fontSize={"16"}
+            hasPadding
+            options={[
+              { label: "Male", value: "0" },
+              { label: "Female", value: "1" }
+            ]}
           />
         </View>
 
