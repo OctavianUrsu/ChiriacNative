@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import Forma from "./components/forma";
+import React from "react";
+import AppContainer from "./AppNavigator";
 
-export default class App extends Component {
+export default class App extends React.Component {
   render() {
-    return <Forma />;
+    return <AppContainer />;
   }
 }

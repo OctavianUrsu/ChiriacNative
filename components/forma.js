@@ -1,11 +1,22 @@
 import React, { Component } from "react";
-import { View, Text, AsyncStorage } from "react-native";
+import { View, Text, AsyncStorage, StyleSheet } from "react-native";
 
 class Forma extends Component {
   constructor() {
     super();
     this.state = {};
   }
+
+  static navigationOptions = {
+    title: "Date Personale",
+    headerStyle: {
+      backgroundColor: "#E62027"
+    },
+    headerTintColor: "#fff",
+    headerTitleStyle: {
+      fontWeight: "bold"
+    }
+  };
 
   async componentDidMount() {
     let getKeys = ["height", "selectedItem", "age", "weight"];
@@ -49,12 +60,38 @@ class Forma extends Component {
     }
 
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Masa ideală: {idealWeightRounded} kg</Text>
-        <Text>BMR: {bmrRounded} cal/zi</Text>
+      <View style={{ flex: 1 }}>
+        <View style={styles.tabs}>
+          <Text style={{ padding: 20, fontSize: 15 }}>
+            <Text style={styles.label}>Masa ideală: </Text>
+            <Text>{idealWeightRounded} kg</Text>
+          </Text>
+        </View>
+
+        <View style={styles.tabs}>
+          <Text style={{ padding: 20, fontSize: 15 }}>
+            <Text style={styles.label}>BMR: </Text>
+            <Text style={{ textAlign: "right" }}>{bmrRounded} cal/zi</Text>
+          </Text>
+        </View>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  tabs: {
+    backgroundColor: "#FAFAFA",
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: "#D8D8D8",
+    borderTopColor: "#FAFAFA"
+  },
+
+  label: {
+    padding: 20,
+    fontWeight: "bold"
+  }
+});
 
 export default Forma;

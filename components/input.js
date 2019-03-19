@@ -5,23 +5,22 @@ import { Button } from "react-native-material-ui";
 import SwitchSelector from "react-native-switch-selector";
 
 export default class Input extends Component {
+  static navigationOptions = {
+    title: "Setări",
+    headerStyle: {
+      backgroundColor: "#E62027"
+    },
+    headerTintColor: "#fff",
+    headerTitleStyle: {
+      fontWeight: "bold"
+    }
+  };
+
   state = {
     age: "",
     height: "",
     weight: "",
-    selectedItem: "",
-    data: [
-      {
-        label: "Male",
-        value: "0",
-        color: "#1e90ff"
-      },
-      {
-        label: "Female",
-        value: "1",
-        color: "#ff6b81"
-      }
-    ]
+    selectedItem: ""
   };
 
   async componentDidMount() {
@@ -58,10 +57,6 @@ export default class Input extends Component {
       weight: "",
       height: ""
     });
-  };
-
-  handleRadio = data => {
-    this.setState({ selectedItem: data });
   };
 
   render() {
@@ -107,17 +102,23 @@ export default class Input extends Component {
 
         <View style={{ padding: 10 }}>
           <SwitchSelector
-            value={this.state.selectedItem}
+            initial={this.state.selectedItem}
             onPress={value => this.setState({ selectedItem: value })}
             textColor={"#E62027"}
             selectedColor={"#fff"}
             buttonColor={"#E62027"}
             borderColor={"#E62027"}
-            fontSize={"16"}
+            fontSize={16}
             hasPadding
             options={[
-              { label: "Male", value: "0" },
-              { label: "Female", value: "1" }
+              {
+                label: "Male",
+                value: "0"
+              },
+              {
+                label: "Female",
+                value: "1"
+              }
             ]}
           />
         </View>
@@ -130,7 +131,12 @@ export default class Input extends Component {
           }}
         >
           <View style={{ flex: 1 }}>
-            <Button raised primary text="Save" onPress={this.handleSubmit} />
+            <Button
+              raised
+              primary
+              text="Salvează"
+              onPress={this.handleSubmit}
+            />
           </View>
           <View style={{ flex: 1, marginLeft: 10 }}>
             <Button raised accent text="Reset" onPress={this.handleRemove} />
