@@ -10,7 +10,9 @@ class Forma extends Component {
   static navigationOptions = {
     title: "Date Personale",
     headerStyle: {
-      backgroundColor: "#E62027"
+      backgroundColor: "#E62027",
+      borderBottomWidth: 0,
+      shadowOpacity: 0
     },
     headerTintColor: "#fff",
     headerTitleStyle: {
@@ -61,17 +63,46 @@ class Forma extends Component {
 
     return (
       <View style={{ flex: 1 }}>
+        <View style={{ backgroundColor: "#BF0000" }}>
+          <Text style={styles.headerMenu}>Personale</Text>
+        </View>
+
         <View style={styles.tabs}>
-          <Text style={{ padding: 20, fontSize: 15 }}>
+          <Text style={styles.fullText}>
+            <Text style={styles.label}>Vârsta: </Text>
+            <Text>{this.state.getAge} ani</Text>
+          </Text>
+        </View>
+        <View style={styles.tabs}>
+          <Text style={styles.fullText}>
+            <Text style={styles.label}>Masa: </Text>
+            <Text>{this.state.getWeight} kg</Text>
+          </Text>
+        </View>
+        <View style={styles.tabs}>
+          <Text style={styles.fullText}>
+            <Text style={styles.label}>Înălțimea: </Text>
+            <Text>{this.state.getHeight} cm</Text>
+          </Text>
+        </View>
+
+        {/*--------------------*/}
+
+        <View style={{ backgroundColor: "#BF0000" }}>
+          <Text style={styles.headerMenu}>Fitness</Text>
+        </View>
+
+        <View style={styles.tabs}>
+          <Text style={styles.fullText}>
             <Text style={styles.label}>Masa ideală: </Text>
             <Text>{idealWeightRounded} kg</Text>
           </Text>
         </View>
 
         <View style={styles.tabs}>
-          <Text style={{ padding: 20, fontSize: 15 }}>
+          <Text style={styles.fullText}>
             <Text style={styles.label}>BMR: </Text>
-            <Text style={{ textAlign: "right" }}>{bmrRounded} cal/zi</Text>
+            <Text>{bmrRounded} cal/zi</Text>
           </Text>
         </View>
       </View>
@@ -82,7 +113,7 @@ class Forma extends Component {
 const styles = StyleSheet.create({
   tabs: {
     backgroundColor: "#FAFAFA",
-    borderRadius: 4,
+    borderRadius: 0,
     borderWidth: 0.5,
     borderColor: "#D8D8D8",
     borderTopColor: "#FAFAFA"
@@ -91,6 +122,18 @@ const styles = StyleSheet.create({
   label: {
     padding: 20,
     fontWeight: "bold"
+  },
+
+  fullText: {
+    padding: 15,
+    fontSize: 14
+  },
+
+  headerMenu: {
+    padding: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff"
   }
 });
 
