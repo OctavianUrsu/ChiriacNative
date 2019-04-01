@@ -3,12 +3,13 @@ import {
   View,
   AsyncStorage,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert,
+  Text
 } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Button } from "react-native-material-ui";
 import SwitchSelector from "react-native-switch-selector";
-import FlashMessage, { showMessage } from "react-native-flash-message";
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -34,7 +35,7 @@ export default class Input extends Component {
     age: "",
     height: "",
     weight: "",
-    selectedItem: null
+    selectedItem: "0"
   };
 
   async componentDidMount() {
@@ -50,6 +51,24 @@ export default class Input extends Component {
     });
   }
 
+  showErrorAlert = () => {
+    Alert.alert(
+      "Eroare",
+      "Introudceți toate datele.",
+      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+      { cancelable: true }
+    );
+  };
+
+  showSuccessAlert = () => {
+    Alert.alert(
+      "Succes",
+      "Datele au fost salvate.",
+      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+      { cancelable: true }
+    );
+  };
+
   handleSubmit = async () => {
     if (
       this.state.age === null ||
@@ -57,12 +76,7 @@ export default class Input extends Component {
       this.state.height === null ||
       (this.state.age && this.state.weight && this.state.height) === null
     ) {
-      showMessage({
-        message: "Erroare",
-        description: "Introduceți toate datele!",
-        type: "danger",
-        icon: "auto"
-      });
+      this.showErrorAlert();
     } else {
       await AsyncStorage.multiSet([
         ["age", this.state.age],
@@ -70,12 +84,7 @@ export default class Input extends Component {
         ["weight", this.state.weight],
         ["selectedItem", this.state.selectedItem]
       ]);
-      showMessage({
-        message: "Success",
-        description: "Datele au fost salvate!",
-        type: "success",
-        icon: "auto"
-      });
+      this.showSuccessAlert();
       Keyboard.dismiss();
     }
   };
@@ -87,13 +96,6 @@ export default class Input extends Component {
       age: "",
       weight: "",
       height: ""
-    });
-
-    showMessage({
-      message: "Success",
-      description: "Datele au fost resetate!",
-      type: "success",
-      icon: "auto"
     });
   };
 
@@ -141,7 +143,9 @@ export default class Input extends Component {
           <View style={{ padding: 10 }}>
             <SwitchSelector
               onPress={value => this.setState({ selectedItem: value })}
-              value={this.state.selectedItem}
+              value={
+                this.state.selectedItem === null ? 0 : this.state.selectedItem
+              }
               textColor={"#E62027"}
               selectedColor={"#fff"}
               buttonColor={"#E62027"}
@@ -159,6 +163,8 @@ export default class Input extends Component {
                 }
               ]}
             />
+
+            <Text>{this.state.selectedItem}</Text>
           </View>
 
           <View
@@ -180,8 +186,6 @@ export default class Input extends Component {
               <Button raised accent text="Reset" onPress={this.handleRemove} />
             </View>
           </View>
-
-          <FlashMessage position="right" />
         </View>
       </DismissKeyboard>
     );
