@@ -22,7 +22,7 @@ export default class Menu extends Component {
         >
           <Image
             style={{ width: 50, height: 50 }}
-            source={require("./img/sport.png")}
+            source={require("../img/sport.png")}
           />
           <Text style={styles.text}>Date</Text>
         </TouchableOpacity>
@@ -30,7 +30,7 @@ export default class Menu extends Component {
         <TouchableOpacity style={styles.button}>
           <Image
             style={{ width: 50, height: 50 }}
-            source={require("./img/calendar.png")}
+            source={require("../img/calendar.png")}
           />
           <Text style={styles.text}>Calendar</Text>
         </TouchableOpacity>
@@ -40,7 +40,7 @@ export default class Menu extends Component {
         >
           <Image
             style={{ width: 50, height: 50 }}
-            source={require("./img/settings.png")}
+            source={require("../img/settings.png")}
           />
           <Text style={styles.text}>Setări</Text>
         </TouchableOpacity>

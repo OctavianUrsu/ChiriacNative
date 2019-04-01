@@ -1,5 +1,5 @@
 import React from "react";
-import AppContainer from "./AppNavigator";
+import AppContainer from "./src/components/AppNavigator";
 
 export default class App extends React.Component {
   render() {

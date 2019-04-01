@@ -1,12 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, AsyncStorage, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, AsyncStorage } from "react-native";
 
-class Forma extends Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-
+export default class DatePersonale extends Component {
   static navigationOptions = {
     title: "Date Personale",
     headerStyle: {
@@ -20,6 +15,11 @@ class Forma extends Component {
     }
   };
 
+  constructor() {
+    super();
+    this.state = {};
+  }
+
   async componentDidMount() {
     let getKeys = ["height", "selectedItem", "age", "weight"];
     await AsyncStorage.multiGet(getKeys).then(result =>
@@ -32,10 +32,8 @@ class Forma extends Component {
     );
   }
 
-  render() {
+  idealWeight = (idealWeightRounded = "NaN") => {
     const heightInch = this.state.getHeight / 2.54; //height converted to inch
-    let idealWeightRounded = null;
-    let bmrRounded = null;
 
     if (this.state.getSelectedItem === "0") {
       const idealWeight = 50 + 2.3 * (heightInch - 60); //ideal weight calculator for male: Robinson calculator
@@ -45,6 +43,10 @@ class Forma extends Component {
       idealWeightRounded = idealWeight.toFixed(1); //ideal weight for female rounded
     }
 
+    return idealWeightRounded;
+  };
+
+  bmr = (bmrRounded = "NaN") => {
     if (this.state.getSelectedItem === "0") {
       const bmr =
         66.47 +
@@ -61,6 +63,34 @@ class Forma extends Component {
       bmrRounded = bmr.toFixed(0);
     }
 
+    return bmrRounded;
+  };
+
+  showAge = () => {
+    if (this.state.getAge === null) {
+      return <Text>NaN</Text>;
+    } else {
+      return <Text>{this.state.getAge} ani</Text>;
+    }
+  };
+
+  showWeight = () => {
+    if (this.state.getWeight === null) {
+      return <Text>NaN</Text>;
+    } else {
+      return <Text>{this.state.getWeight} kg</Text>;
+    }
+  };
+
+  showHeight = () => {
+    if (this.state.getHeight === null) {
+      return <Text>NaN</Text>;
+    } else {
+      return <Text>{this.state.getHeight} cm</Text>;
+    }
+  };
+
+  render() {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ backgroundColor: "#BF0000" }}>
@@ -70,19 +100,19 @@ class Forma extends Component {
         <View style={styles.tabs}>
           <Text style={styles.fullText}>
             <Text style={styles.label}>Vârsta: </Text>
-            <Text>{this.state.getAge} ani</Text>
+            <Text>{this.showAge()}</Text>
           </Text>
         </View>
         <View style={styles.tabs}>
           <Text style={styles.fullText}>
             <Text style={styles.label}>Masa: </Text>
-            <Text>{this.state.getWeight} kg</Text>
+            <Text>{this.showWeight()}</Text>
           </Text>
         </View>
         <View style={styles.tabs}>
           <Text style={styles.fullText}>
             <Text style={styles.label}>Înălțimea: </Text>
-            <Text>{this.state.getHeight} cm</Text>
+            <Text>{this.showHeight()}</Text>
           </Text>
         </View>
 
@@ -95,14 +125,14 @@ class Forma extends Component {
         <View style={styles.tabs}>
           <Text style={styles.fullText}>
             <Text style={styles.label}>Masa ideală: </Text>
-            <Text>{idealWeightRounded} kg</Text>
+            <Text>{this.idealWeight()} kg</Text>
           </Text>
         </View>
 
         <View style={styles.tabs}>
           <Text style={styles.fullText}>
             <Text style={styles.label}>BMR: </Text>
-            <Text>{bmrRounded} cal/zi</Text>
+            <Text>{this.bmr()} cal/zi</Text>
           </Text>
         </View>
       </View>
@@ -136,5 +166,3 @@ const styles = StyleSheet.create({
     color: "#fff"
   }
 });
-
-export default Forma;

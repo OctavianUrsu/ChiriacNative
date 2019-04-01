@@ -4,8 +4,7 @@ import {
   AsyncStorage,
   Keyboard,
   TouchableWithoutFeedback,
-  Alert,
-  Text
+  Alert
 } from "react-native";
 import { TextField } from "react-native-material-textfield";
 import { Button } from "react-native-material-ui";
@@ -17,7 +16,7 @@ const DismissKeyboard = ({ children }) => (
   </TouchableWithoutFeedback>
 );
 
-export default class Input extends Component {
+export default class Settings extends Component {
   static navigationOptions = {
     title: "Setări",
     headerStyle: {
@@ -69,12 +68,20 @@ export default class Input extends Component {
     );
   };
 
+  showSuccessResetAlert = () => {
+    Alert.alert(
+      "Succes",
+      "Datele au fost resetate.",
+      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+      { cancelable: true }
+    );
+  };
+
   handleSubmit = async () => {
     if (
       this.state.age === null ||
       this.state.weight === null ||
-      this.state.height === null ||
-      (this.state.age && this.state.weight && this.state.height) === null
+      this.state.height === null
     ) {
       this.showErrorAlert();
     } else {
@@ -97,6 +104,7 @@ export default class Input extends Component {
       weight: "",
       height: ""
     });
+    this.showSuccessResetAlert();
   };
 
   render() {
@@ -163,8 +171,6 @@ export default class Input extends Component {
                 }
               ]}
             />
-
-            <Text>{this.state.selectedItem}</Text>
           </View>
 
           <View
